@@ -229,6 +229,22 @@ void main() {
     expect(results[1]['tagName'], equals('DIV'));
   });
 
+  test('scryRenderedDomComponentsWithId', () {
+    var idName = 'searchableId';
+
+    component = renderIntoDocument(div({}, [
+      div({'id': idName}),
+      div({'id': idName}),
+      span({})
+    ]));
+
+    var results = scryRenderedDOMComponentsWithId(component, idName);
+
+    expect(results.length, 2);
+    expect(results[0]['props']['id'], equals(idName));
+    expect(results[1]['props']['id'], equals(idName));
+  });
+
   test('scryRenderedDOMComponentsWithTag', () {
     component = renderIntoDocument(div({}, [div({}), div({}), span({})]));
 

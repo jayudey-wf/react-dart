@@ -344,6 +344,20 @@ List scryRenderedDOMComponentsWithClass(JsObject tree, String className) {
 }
 
 /// Finds all instances of components in the rendered tree that are DOM
+/// components with an id matching id arguments value.
+List scryRenderedDOMComponentsWithId(JsObject tree, String id) {
+  dartTestFunction(window, component) {
+    if (component['props']['id'] == id) {
+      return true;
+    }
+  }
+
+  JsFunction jsTestFunction = new JsFunction.withThis(dartTestFunction);
+
+  return findAllInRenderedTree(tree, jsTestFunction);
+}
+
+/// Finds all instances of components in the rendered tree that are DOM
 /// components with the tag name matching tagName.
 JsObject scryRenderedDOMComponentsWithTag(JsObject tree, String tagName) {
   return _TestUtils.callMethod(
