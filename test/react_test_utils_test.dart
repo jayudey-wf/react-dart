@@ -229,6 +229,38 @@ void main() {
     expect(results[1]['tagName'], equals('DIV'));
   });
 
+  group('scryRenderedDomComponentsWithId',(){
+    var matchingId = 'searchableId';
+    var mismatchedId = 'theWrongId';
+
+    test('returns components with matching id', () {
+      component = renderIntoDocument(div({}, [
+        div({'id': matchingId}),
+        div({'id': matchingId}),
+        div({'id': mismatchedId}),
+        span({})
+      ]));
+
+      var results = scryRenderedDOMComponentsWithId(component, matchingId);
+
+      expect(results.length, 2);
+      expect(results[0]['props']['id'], equals(matchingId));
+      expect(results[1]['props']['id'], equals(matchingId));
+    });
+
+    test('returns empty list when no matches detected', () {
+      component = renderIntoDocument(div({}, [
+        div({'id': mismatchedId}),
+        div({'id': mismatchedId}),
+        span({})
+      ]));
+
+      var results = scryRenderedDOMComponentsWithId(component, matchingId);
+
+      expect(results.isEmpty, isTrue);
+    });
+  });
+
   test('scryRenderedDOMComponentsWithTag', () {
     component = renderIntoDocument(div({}, [div({}), div({}), span({})]));
 
