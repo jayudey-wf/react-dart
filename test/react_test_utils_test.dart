@@ -229,20 +229,36 @@ void main() {
     expect(results[1]['tagName'], equals('DIV'));
   });
 
-  test('scryRenderedDomComponentsWithId', () {
-    var idName = 'searchableId';
+  group('scryRenderedDomComponentsWithId',(){
+    var matchingId = 'searchableId';
+    var mismatchedId = 'theWrongId';
 
-    component = renderIntoDocument(div({}, [
-      div({'id': idName}),
-      div({'id': idName}),
-      span({})
-    ]));
+    test('returns components with matching id', () {
+      component = renderIntoDocument(div({}, [
+        div({'id': matchingId}),
+        div({'id': matchingId}),
+        div({'id': mismatchedId}),
+        span({})
+      ]));
 
-    var results = scryRenderedDOMComponentsWithId(component, idName);
+      var results = scryRenderedDOMComponentsWithId(component, matchingId);
 
-    expect(results.length, 2);
-    expect(results[0]['props']['id'], equals(idName));
-    expect(results[1]['props']['id'], equals(idName));
+      expect(results.length, 2);
+      expect(results[0]['props']['id'], equals(matchingId));
+      expect(results[1]['props']['id'], equals(matchingId));
+    });
+
+    test('returns empty list when no matches detected', () {
+      component = renderIntoDocument(div({}, [
+        div({'id': mismatchedId}),
+        div({'id': mismatchedId}),
+        span({})
+      ]));
+
+      var results = scryRenderedDOMComponentsWithId(component, matchingId);
+
+      expect(results.isEmpty, isTrue);
+    });
   });
 
   test('scryRenderedDOMComponentsWithTag', () {
